@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <title>Твојот Резултат</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/quiz_style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/slikicka.png', v=1) }}" type="image/png">
+    <style>
+        .result-container { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center; background: radial-gradient(circle at center, #11152b 0%, #070813 100%); padding: 20px; }
+        .scanning { font-size: 1.2rem; color: #00E5FF; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 3px; animation: blink 1s infinite; }
+        .profile-result { font-size: 3rem; color: #F2A900; font-weight: 900; text-shadow: 0 0 20px rgba(242, 169, 0, 0.4); margin-bottom: 30px; transform: scale(0.9); animation: popIn 0.5s 1.5s forwards; opacity: 0; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        @keyframes popIn { to { opacity: 1; transform: scale(1); } }
+        .hidden-at-start { opacity: 0; animation: fadeIn 1s 2s forwards; }
+    </style>
+</head>
+<body>
+    <div class="result-container">
+        <div class="scanning" id="scan-text">Ги анализираме твоите одговори...</div>
+
+        <h1 class="profile-result">{{ profile }}</h1>
+
+        <div class="hidden-at-start">
+            <p style="max-width: 600px; margin: 0 auto 30px auto; font-size: 1.2rem; line-height: 1.6;">Врз основа на твоите интереси, оваа струка е совршен избор за тебе. Те чекаме во СЕТУГС „Михајло Пупин“!</p>
+            <a href="/" class="btn-pupin" style="text-decoration: none;">НАПРАВИ ГО КВИЗОТ ПОВТОРНО</a>
+        </div>
+    </div>
+
+    <script>
+        // Ефект на скенирање пред да се појави резултатот
+        setTimeout(() => {
+            document.getElementById('scan-text').innerText = "АНАЛИЗАТА Е ЗАВРШЕНА!";
+            document.getElementById('scan-text').style.animation = "none";
+            document.getElementById('scan-text').style.color = "#4CAF50";
+        }, 1500);
+    </script>
+</body>
+</html>

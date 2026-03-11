@@ -1,0 +1,5 @@
+Flask
+gunicorn
+git add requirements.txt README.md
+git commit -m "Dodadeni requirements i readme"
+git push

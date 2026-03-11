@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <title>Струка за тебе | Михајло Пупин</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/quiz_style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/slikicka.png', v=1) }}" type="image/png">
+</head>
+<body>
+
+    <div id="quiz-preloader">
+        <div class="loader-circle"></div>
+        <h2>Вчитување на системот...</h2>
+    </div>
+
+    <div id="intro-screen" class="screen active-screen">
+        <h1 class="glitch-text" data-text="ИДНИНАТА ПОЧНУВА ТУКА">ИДНИНАТА ПОЧНУВА ТУКА</h1>
+        <p>Откриј која струка во СЕТУГС „Михајло Пупин“ е создадена за тебе.</p>
+        <button class="btn-pupin" onclick="startStory()">ЗАПОЧНИ АНАЛИЗА <i class="fas fa-bolt"></i></button>
+    </div>
+
+    <div id="story-screen" class="screen">
+        <div class="character-container">
+            <img src="{{ url_for('static', filename='images/pupin_maskota.png') }}" alt="Силуета" class="silhouette-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/236/236832.png'">
+        </div>
+        <div class="speech-bubble">
+            <p id="typewriter-text"></p>
+        </div>
+    </div>
+
+    <div id="quiz-screen" class="screen">
+        <div class="quiz-header">
+            <h2>ОТКРИВАЊЕ НА ВЕШТИНИ</h2>
+            <div class="yellow-line"></div>
+        </div>
+
+        <form action="/result" method="POST" class="pupin-form">
+            <div class="q-card highlight-card">
+                <p><strong>Избери тип на образование:</strong></p>
+                <select name="edu_type" required>
+                    <option value="4">4-годишно (Техничар / Инженер)</option>
+                    <option value="3">3-годишно (Занает / Практичар)</option>
+                </select>
+            </div>
+
+            {% for q in questions %}
+            <div class="q-card">
+                <p><span class="q-num">{{ loop.index }}</span> {{ q.text }}</p>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="q{{q.id}}" value="yes" required>
+                        <span class="custom-radio"></span> ДА
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="q{{q.id}}" value="no">
+                        <span class="custom-radio"></span> НЕ
+                    </label>
+                </div>
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-pupin submit-btn">ГЕНЕРИРАЈ РЕЗУЛТАТ</button>
+        </form>
+    </div>
+
+    <script>
+        // Тргање на прелоадерот по 1.5 секунди
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('quiz-preloader').style.opacity = '0';
+                setTimeout(() => document.getElementById('quiz-preloader').style.display = 'none', 500);
+            }, 1500);
+        });
+
+        // Започнување на приказната
+        function startStory() {
+            document.getElementById('intro-screen').classList.remove('active-screen');
+            document.getElementById('story-screen').classList.add('active-screen');
+
+            // Ефект на пишување текст
+            const text = "Здраво! Ајде заедно да ја одбереме твојата идеална струка во СЕТУГС „Михајло Пупин“. Одговори искрено на следниве прашања...";
+            let i = 0;
+            const speed = 40; // брзина на пишување
+
+            function typeWriter() {
+                if (i < text.length) {
+                    document.getElementById("typewriter-text").innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, speed);
+                } else {
+                    // Кога ќе заврши текстот, почекај 2 секунди и отвори го квизот
+                    setTimeout(showQuiz, 2500);
+                }
+            }
+
+            // Започни со пишување по мала пауза за да се појави силуетата
+            setTimeout(typeWriter, 500);
+        }
+
+        function showQuiz() {
+            document.getElementById('story-screen').classList.remove('active-screen');
+            document.getElementById('quiz-screen').classList.add('active-screen');
+            window.scrollTo(0,0);
+        }
+    </script>
+</body>
+</html>
